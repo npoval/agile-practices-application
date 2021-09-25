@@ -3,6 +3,7 @@ package com.acme.dbo.retrofit;
 import com.fasterxml.jackson.annotation.*;
 
 import javax.annotation.processing.Generated;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,16 +30,16 @@ public class Client {
 
     @JsonProperty("created")
     @JsonPropertyDescription("Client created")
-    private String created;
+    private LocalDateTime created;
 
     @JsonProperty("enabled")
     @JsonPropertyDescription("Client enabled")
-    private Boolean enabled;
+    private boolean enabled;
 
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    public Client(@JsonProperty("login") String login, @JsonProperty("salt") String salt, @JsonProperty("secret") String secret) {
+    public Client(@JsonProperty("login") String login, @JsonProperty("salt") String salt, @JsonProperty("secret") String secret, @JsonProperty("created") LocalDateTime created, @JsonProperty("enabled") boolean enabled) {
         this.login = login;
         this.salt = salt;
         this.secret = secret;
@@ -72,6 +73,10 @@ public class Client {
     @JsonProperty("secret")
     public void setSecret(String secret) {
         this.secret = secret;
+    }
+
+    public int getId() {
+        return id;
     }
 
     @Override

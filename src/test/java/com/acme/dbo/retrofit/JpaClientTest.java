@@ -1,24 +1,34 @@
 package com.acme.dbo.retrofit;
 
-
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-
+import org.junit.jupiter.api.*;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Random;
+import static org.hamcrest.Matchers.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
-public class RetrofitTestClient {
+public class JpaClientTest {
     ClientService service;
+    private static EntityManagerFactory entityManagerFactory;
+
+    @BeforeEach
+    public void setConnect(){
+        entityManagerFactory = Persistence.createEntityManagerFactory("dbo");
+    }
+
+    @AfterEach
+    public void closeConnect() {
+        entityManagerFactory.close();
+    }
 
     @BeforeEach
     public void init() {
@@ -35,8 +45,21 @@ public class RetrofitTestClient {
     @Disabled
     @Test
     @DisplayName("Проверка возможности получения всех клиентов через GET")
-    public void shouldGetClients() throws IOException {
-        service.getClients().execute().body().forEach(System.out::println);
+    public void shouldGetClientById() throws IOException {
+        final EntityManager em = entityManagerFactory.createEntityManager();
+        final String newLogin = "login" + new Random().nextInt();
+        final Client client = new Client(newLogin, "secret","salt", LocalDateTime.now(), true);
+        em.getTransaction().begin();
+        em.persist(client);
+        em.getTransaction().commit();
+
+        assertEquals(newLogin, service.getClient(client.getId()).execute().body().getLogin());
+
+        em.getTransaction().begin();
+        final Client clientSaved = em.find(Client.class, client.getId());
+        em.remove(clientSaved);
+        em.getTransaction().commit();
+        em.close();
     }
 
     @Disabled
