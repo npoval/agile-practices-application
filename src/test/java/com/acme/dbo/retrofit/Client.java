@@ -1,20 +1,21 @@
 package com.acme.dbo.retrofit;
 
 import com.fasterxml.jackson.annotation.*;
+import org.hibernate.annotations.CreationTimestamp;
 
-import javax.annotation.processing.Generated;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import javax.persistence.*;
+import java.sql.Date;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+//@JsonInclude(JsonInclude.Include.NON_NULL)
 
-
-@Generated("jsonschema2pojo")
+@Entity
+//@Generated("jsonschema2pojo")
 public class Client {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("id")
     @JsonPropertyDescription("Client id")
-    private int id;
+    private Integer id;
 
     @JsonProperty("login")
     @JsonPropertyDescription("Client login")
@@ -28,18 +29,21 @@ public class Client {
     @JsonPropertyDescription("Client secret")
     private String secret;
 
+    @CreationTimestamp
     @JsonProperty("created")
+    @Column(name = "created")
     @JsonPropertyDescription("Client created")
-    private LocalDateTime created;
+    private Date created;
+
 
     @JsonProperty("enabled")
     @JsonPropertyDescription("Client enabled")
     private boolean enabled;
 
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+   public Client() {
+   }
 
-    public Client(@JsonProperty("login") String login, @JsonProperty("salt") String salt, @JsonProperty("secret") String secret, @JsonProperty("created") LocalDateTime created, @JsonProperty("enabled") boolean enabled) {
+    public Client(@JsonProperty("login") String login, @JsonProperty("salt") String salt, @JsonProperty("secret")String secret, @JsonProperty("enabled") boolean enabled) {
         this.login = login;
         this.salt = salt;
         this.secret = secret;
@@ -75,8 +79,16 @@ public class Client {
         this.secret = secret;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 
     @Override

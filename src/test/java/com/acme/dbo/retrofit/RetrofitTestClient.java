@@ -32,19 +32,19 @@ public class RetrofitTestClient {
         service = retrofit.create(ClientService.class);
     }
 
-    @Disabled
+
     @Test
     @DisplayName("Проверка возможности получения всех клиентов через GET")
     public void shouldGetClients() throws IOException {
         service.getClients().execute().body().forEach(System.out::println);
     }
 
-    @Disabled
+
     @Test
     @DisplayName("Проверка создания клиента через POST")
     public void shouldPostClient() throws IOException {
-        //String loginClient = service.createClient(new Client("a8ada3d@ytr.ru", "same-salt", "2131231ffd43400000"))
-                //.execute().body().getLogin();
-        //assertEquals("a8ada3d@ytr.ru", loginClient);
+        String loginClient = service.createClient(new Client("a8ada3d@ytr.ru", "same-salt", "2131231ffd43400000", true))
+                .execute().body().getLogin();
+        assertEquals("a8ada3d@ytr.ru", loginClient);
     }
 }

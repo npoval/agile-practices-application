@@ -37,7 +37,6 @@ public class TestAccountJdbc {
                         .contentType(ContentType.JSON);
     }
 
-    @Disabled
     @Test
     @DisplayName("Проверка сценария GET account")
     public void shouldGetAccount() throws SQLException {

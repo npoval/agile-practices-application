@@ -1,24 +1,20 @@
 package com.acme.dbo.assuredtest;
 
-
-import io.restassured.filter.log.RequestLoggingFilter;
-import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import javax.annotation.CheckReturnValue;
 
 import static io.restassured.RestAssured.given;
 import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.*;
 
+
 public class RestAssuredTestClient {
     RequestSpecification request;
+    private Response response;
 
     @BeforeEach
     public void init() {
@@ -31,7 +27,7 @@ public class RestAssuredTestClient {
                     .contentType(ContentType.JSON);
     }
 
-    @Disabled
+
     @Test
     @DisplayName("Проверка сценария GET client by Exist id")
     public void shouldGetClientByExistId() {
@@ -43,7 +39,7 @@ public class RestAssuredTestClient {
             "login", is("account@acme.com"));
     }
 
-    @Disabled
+
     @Test
     @DisplayName("Проверка сценария DELETE client by Login")
     public void shouldDeleteClientByLogin() {
@@ -63,7 +59,7 @@ public class RestAssuredTestClient {
                 .statusCode(SC_OK);
     }
 
-    @Disabled
+
     @Test
     @DisplayName("Проверка сценария GET client by Not Exist id")
     public void shouldGetClientByNotExistId() {
@@ -73,7 +69,7 @@ public class RestAssuredTestClient {
                 .statusCode(SC_NOT_FOUND);
     }
 
-    @Disabled
+
     @Test
     @DisplayName("Проверка сценария DELETE client by Not Exist id")
     public void shouldDeleteClientByNotExistId() {
@@ -81,5 +77,13 @@ public class RestAssuredTestClient {
                 .delete("/client/{id}", 85555)
                 .then()
                 .statusCode(SC_INTERNAL_SERVER_ERROR);
+    }
+
+    @Test
+    @DisplayName("Проверка сценария GET client by Exist id")
+    public void shouldGetClientByExistId2() throws NoSuchMethodException {
+        response = request.when()
+                .get("/client/{id}", 2);
+        System.out.println(response.jsonPath().getString("login"));
     }
 }
